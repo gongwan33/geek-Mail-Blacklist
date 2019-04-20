@@ -36,11 +36,11 @@ $gmb_rules = gmb_get_rules();
 $GMB_enabled = get_option('gmb-enabled');
 
 if($GMB_enabled === 'no') {
-    $GMB_enable_btn_str = 'Enable Email Filter';
+    $GMB_enable_btn_str = 'Enable Blacklist';
     $GMB_enable_btn_data = '1';
     $GMB_enable_btn_color = "red";
 } else if($GMB_enabled === 'yes') {
-    $GMB_enable_btn_str = 'Disable Email Filter';
+    $GMB_enable_btn_str = 'Disable Blacklist';
     $GMB_enable_btn_data = '0';
     $GMB_enable_btn_color = "green";
 } else {
