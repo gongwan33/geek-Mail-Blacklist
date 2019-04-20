@@ -1,8 +1,7 @@
 <?php
-
 /*
   Plugin Name: Geek Mail Blacklist
-  Plugin URI: http://joybin.cn/geek-mail-blacklist
+  Plugin URI: https://geekblog.mybluemix.net/archives/611
   Description: Block users with certain emails from registering
   Author: Wagner
   Version: 1.0.0
