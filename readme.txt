@@ -5,7 +5,7 @@ Tags: Blacklist, spam, email
 Requires at least: 3.9
 Tested up to: 5.1.0
 
-Block certain kinds of users from registering to your WordPress site by adding blacklist rules.
+Block users with certain emails from registering to your WordPress site by adding blacklist rules.
 
 == Description ==
 - Block certain kinds of users from registering to your WordPress site by adding blacklist rules. 
