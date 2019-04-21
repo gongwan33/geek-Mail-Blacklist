@@ -53,7 +53,7 @@ if($GMB_enabled === 'no') {
     <h3>Emails to Block(Support Regular Expression):</h3>
     <label><strong>Instruction</strong>: when adding regular expressions, please wrap it with symbol '/'. For example: /.*@a.com/ means filter all emails with the domain a.com. Any rule without wrapping by '/' will be regarded as a full match rule.</label>
     <br/>
-    <label style="color:red"><strong>Warning</strong>: this blacklist function relys on the default WordPress registeration process. So if you are using any customized registeration pages, please make sure they follow the WordPress standard registeration functions and process.</label>
+    <label style="color:red"><strong>Warning</strong>: this blacklist function relys on the default WordPress registration process. So if you are using any customized registration pages, please make sure they follow the WordPress standard registration functions and process.</label>
 </div>
 <div>
     <input type="text" name="gmb-bl-rule" placeholder="One rule at a time" style="width: 500px"/>
