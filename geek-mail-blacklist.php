@@ -22,14 +22,14 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+if ( ! defined( 'ABSPATH' ) ) exit; 
+
 require_once(dirname(__FILE__).'/variables.php');
+require_once(GMB_PATH . '/lib/GMB.php');
+require_once(GMB_PATH.'/backend/actions.php');
 
-if ( !defined( 'GMB_URL' ) ) {
-	define( 'GMB_URL', plugins_url( '', __FILE__ ) );
-}
-
-require_once GMB_PATH . '/lib/GMB.php';
 register_activation_hook( __FILE__, array( 'GMB', 'install' ) );
 register_deactivation_hook( __FILE__, array( 'GMB', 'uninstall' ) );
 GMB::init();
+GMBActions::init();
 

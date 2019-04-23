@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; 
+
 class GMB {
 
     public static $cssPath = null;
@@ -46,9 +48,7 @@ class GMB {
     }
 
     public static function isUserValid() {
-        $cur_user = wp_get_current_user();
-
-        if(!empty($cur_user) && in_array('administrator', $cur_user->roles)) {
+        if(current_user_can('administrator')) {
             return true;
         } else {
             return false;

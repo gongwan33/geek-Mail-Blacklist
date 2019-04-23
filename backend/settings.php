@@ -1,38 +1,15 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if(!GMB::isUserValid()) {
     echo "<h3>Only Administor can access this page.</h3>";
 }
 
-function gmb_get_rules() {
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . GMB_DB_NAME; 
-    $sql = "SELECT * FROM $table_name ORDER BY time DESC";
-    $res = $wpdb->get_results($sql, ARRAY_A);
-    return $res;
-}
-
 if(!empty($_POST['gmb-bl-rule'])) {
-    global $wpdb;
-    $cur_user = wp_get_current_user();
-    $userid = $cur_user->ID;
-    $time = current_time('mysql');
-    $exp = $_POST['gmb-bl-rule'];
-    $table_name = $wpdb->prefix . GMB_DB_NAME; 
-
-    $sql = $wpdb->prepare("SELECT id FROM $table_name WHERE expression=%s", $exp);
-    $res = $wpdb->get_row($sql);
-
-    if(empty($res)) {
-        $sql = $wpdb->prepare("INSERT INTO $table_name (expression, time, userid) VALUES (%s, %s, %s)", array($exp, $time, $userid));
-
-        $wpdb->query($sql);
-    }
-
+    $add_res = GMBActions::addRule();
 }
 
-$gmb_rules = gmb_get_rules();
-
+$gmb_rules = GMBActions::getRules();
 $GMB_enabled = get_option('gmb-enabled');
 
 if($GMB_enabled === 'no') {
@@ -47,6 +24,8 @@ if($GMB_enabled === 'no') {
     $GMB_enable_btn_str = 'Error Status';
 }
 
+$gmb_ajax_nonce = wp_create_nonce('gmb_ajax');
+
 ?>
 <form method="post" class="gmb-add-form">
 <div>
@@ -57,14 +36,20 @@ if($GMB_enabled === 'no') {
 </div>
 <div>
     <input type="text" name="gmb-bl-rule" placeholder="One rule at a time" style="width: 500px"/>
+    <?php wp_nonce_field( 'gmb_form', 'gmb-form-nonce' ); ?>
     <input type="submit" value="Add"/>
+    <?php if(!$add_res['res']):?>
+    <div style="color:red">
+        <strong><?php echo esc_html($add_res['info']);?></strong>
+    </div>
+    <?php endif;?>
 </div>
 </form>
 
 <div class="gmb-enable-session" style="font-size:large;">
     <span style="font-weight: bold;">Blacklist Enabled:</span>
-    <span style="background-color:<?php echo $GMB_enable_btn_color;?>;padding:2px;color:white;" ><?php echo strtoupper($GMB_enabled);?></span>
-    <button data="<?php echo $GMB_enable_btn_data;?>" style="font-size:medium;padding:5px" id="gmb-enable-btn"><?php echo $GMB_enable_btn_str;?></button>
+    <span style="background-color:<?php echo esc_attr($GMB_enable_btn_color);?>;padding:2px;color:white;" ><?php echo esc_html(strtoupper($GMB_enabled));?></span>
+    <button data="<?php echo esc_attr($GMB_enable_btn_data);?>" style="font-size:medium;padding:5px" id="gmb-enable-btn"><?php echo esc_html($GMB_enable_btn_str);?></button>
 </div>
 
 <table class="gmb-rules-tb">
@@ -78,11 +63,11 @@ if($GMB_enabled === 'no') {
 <?php if(!empty($gmb_rules)):?>
 <?php foreach($gmb_rules as $rule):?>
 <tr>
-    <td><?php echo $rule['expression'];?></td>
-    <td><?php echo $rule['time'];?></td>
+    <td><?php echo esc_html($rule['expression']);?></td>
+    <td><?php echo esc_html($rule['time']);?></td>
     <?php $user = get_user_by('id', $rule['userid']);?>
-    <td><?php echo $user->display_name;?></td>
-    <td><button class="gmb-del-btn" data="<?php echo $rule['id'];?>">Delete</button></td>
+    <td><?php echo esc_html($user->display_name);?></td>
+    <td><button class="gmb-del-btn" data="<?php echo esc_attr($rule['id']);?>">Delete</button></td>
 </tr>
 <?php endforeach;?>
 <?php endif;?>
@@ -92,26 +77,22 @@ if($GMB_enabled === 'no') {
 var delBtns = document.querySelectorAll('.gmb-del-btn');
 var enableBtn = document.querySelector('#gmb-enable-btn');
 
-function post(url, data) {
-    var params = {
-        action: data
+function post(action, data) {
+    var jsonDat = {
+        action: action, 
+        data: data,
+        _ajax_nonce: "<?php echo esc_js($gmb_ajax_nonce);?>",
     }
 
-    const searchParams = Object.keys(params).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-    }).join('&');
-    
-    fetch(url, {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-        },
-        body: searchParams
-    }).then(res => {
-        location.href = location.href;
+    jQuery.ajax({
+        url: ajaxurl,
+        data: jsonDat,
+        type: "POST",
+        dataType: "json",
+        success: function(res) {
+            location.href = location.href;
+        }, 
     });
-
 }
 
 if(typeof delBtns != 'undefined' && delBtns.length > 0) {
@@ -119,9 +100,9 @@ if(typeof delBtns != 'undefined' && delBtns.length > 0) {
         btn.addEventListener('click', function(ev) {
             if(confirm('Are you sure to delete?')) {
                 var ele = ev.target;
-                var data = "del-" + ele.getAttribute('data');
+                var data = ele.getAttribute('data');
 
-                post("<?php echo GMB_URL.'/backend/actions.php'; ?>", data);
+                post('gmb_del', data);
             };
         });
     });
@@ -130,9 +111,9 @@ if(typeof delBtns != 'undefined' && delBtns.length > 0) {
 if(typeof enableBtn != 'undefined') {
     enableBtn.addEventListener('click', function(ev) {
         var ele = ev.target;
-        var data = "enable-" + ele.getAttribute('data');
+        var data = ele.getAttribute('data');
 
-        post("<?php echo GMB_URL.'/backend/actions.php'; ?>", data);
+        post("gmb_enable", data);
     });
 }
 </script>

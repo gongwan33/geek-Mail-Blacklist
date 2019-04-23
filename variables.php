@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( !defined( 'GMB_NAME' ) ) {
 	define( 'GMB_NAME', 'Geek Mail Blacklist' );
 }
@@ -23,4 +25,7 @@ if ( !defined( 'GMB_PATH' ) ) {
 	define( 'GMB_PATH', dirname( __FILE__ ));
 }
 
+if ( !defined( 'GMB_URL' ) ) {
+	define( 'GMB_URL', plugins_url( '', __FILE__ ) );
+}
 ?>
