@@ -4,12 +4,13 @@ Contributors: Wagner
 Tags: Blacklist, spam, email
 Requires at least: 3.9
 Tested up to: 5.1.0
+Stable tag: trunk
 
 Block users with certain emails from registering to your WordPress site by adding blacklist rules.
 
 == Description ==
 - Block certain kinds of users from registering to your WordPress site by adding blacklist rules. 
-- Super simple to use. The whole plugin just has one simple setting page.
+- Super simple to use. The whole plugin just has one simple settings page.
 - Support regular expression rules.
 - Completely free.
 
@@ -21,4 +22,4 @@ Block users with certain emails from registering to your WordPress site by addin
 - Configure in 'Geek Mail Blacklist' page.
 
 == Screenshots ==
-snapshot1.png
+1. Settings page
