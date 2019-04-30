@@ -15,22 +15,46 @@ class GMB {
         self::deployBlacklist();
     }
 
-    public static function install() {
+    public static function create_database($sql, $tbname) {
         global $wpdb;
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . $tbname; 
+
+        $sql = "CREATE TABLE $table_name ".$sql." $charset_collate;";
 
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE $table_name (
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        dbDelta( $sql );
+    }
+
+    public static function install() {
+        $sql = "(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
             expression text NOT NULL,
             userid mediumint(9) NOT NULL,
             PRIMARY KEY  (id)
-        ) $charset_collate;";
+        )";
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-        dbDelta( $sql );
+        self::create_database($sql, GMB_DB_NAME_BLACKLIST);
+
+        $sql = "(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            email varchar(100) NOT NULL,
+            username varchar(100) NOT NULL,
+            userid mediumint(9) NOT NULL DEFAULT -1,
+            result tinyint(1) NOT NULL DEFAULT 0,
+            count int(16) NOT NULL DEFAULT 0,
+            PRIMARY KEY  (id),
+            INDEX (email),
+            INDEX (username),
+            INDEX (userid),
+            INDEX (time),
+            INDEX (result)
+        )";
+
+        self::create_database($sql, GMB_DB_NAME_LOGIN_MONITOR);
 
         $GMB_enabled = get_option('gmb-enabled');
         if(empty($GMB_enabled)) {
@@ -40,7 +64,11 @@ class GMB {
 
     public static function uninstall() {
         global $wpdb;
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
+        $sql = "DROP TABLE IF EXISTS $table_name";
+        $wpdb->query( $sql );
+
+        $table_name = $wpdb->prefix . GMB_DB_NAME_LOGIN_MONITOR; 
         $sql = "DROP TABLE IF EXISTS $table_name";
         $wpdb->query( $sql );
 
@@ -75,7 +103,7 @@ class GMB {
     public static function GMB_check_fields( $errors, $sanitized_user_login, $user_email ) { 
         global $wpdb;
 
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
         $rules = $wpdb->get_results("SELECT expression FROM $table_name", ARRAY_A);
 
         if(!empty($rules)) {

@@ -26,6 +26,7 @@ if($GMB_enabled === 'no') {
 
 $gmb_ajax_nonce = wp_create_nonce('gmb_ajax');
 
+$monitor_records = GMBMonitor::getRecords();
 ?>
 <form method="post" class="gmb-add-form">
 <div>
@@ -72,6 +73,44 @@ $gmb_ajax_nonce = wp_create_nonce('gmb_ajax');
 <?php endforeach;?>
 <?php endif;?>
 </table>
+
+<div>
+<br/>
+<hr/>
+<br/>
+</div>
+
+<div class="attempts-block">
+<div>
+    <h3>Login Attempts</h3>    
+</div>
+
+<div>
+    <button style="font-size:medium;padding:5px;">Clear Records</button>
+</div>
+
+<table class="gmb-attemps-tb">
+    <tr>
+        <th>Uername</th>
+        <th>Email</th>
+        <th>Last Attemt Time</th>
+        <th>Result</th>
+        <th>Count</th>
+    </tr>
+    <?php if(!empty($monitor_records)):?>
+    <?php foreach($monitor_records as $record):?>
+    <tr>
+        <td><?php echo esc_html($record['username']);?></td>
+        <td><?php echo esc_html($record['email']);?></td>
+        <td><?php echo esc_html($record['time']);?></td>
+        <?php $result = $record['result'] == 1?'Success':'Failed';?>
+        <td style="font-weight:bold;color:<?php echo esc_attr($record['result'] == 1?'green':'red')?>"><?php echo esc_html($result);?></td>
+        <td><?php echo esc_html($record['count']);?></td>
+    </tr>
+    <?php endforeach;?>
+    <?php endif;?>
+</table>
+</div>
 
 <script type="text/javascript">
 var delBtns = document.querySelectorAll('.gmb-del-btn');
@@ -123,7 +162,7 @@ if(typeof enableBtn != 'undefined') {
     margin: 10px;
 }
 
-.gmb-add-form {
+.gmb-add-form, .attempts-block {
     margin: 10px;
 }
 
@@ -131,7 +170,7 @@ if(typeof enableBtn != 'undefined') {
     margin-bottom: 10px;
 }
 
-.gmb-rules-tb {
+.gmb-rules-tb, .gmb-attemps-tb {
     margin: 10px;
     text-align: center;
     width: 90%;
@@ -142,11 +181,25 @@ if(typeof enableBtn != 'undefined') {
     color: white;
 }
 
+.gmb-attemps-tb tr:nth-child(1) {
+    background-color: black; 
+    color: white;
+}
+
 .gmb-rules-tb td, .gmb-rules-tb th {
+    padding: 5px;
+}
+
+.gmb-attemps-tb td, .gmb-attemps-tb th {
     padding: 5px;
 }
 
 .gmb-rules-tb tr:nth-child(2n) {
     background-color: #ccc;
 }
+
+.gmb-attemps-tb tr:nth-child(2n) {
+    background-color: #ccc;
+}
+   
 </style>

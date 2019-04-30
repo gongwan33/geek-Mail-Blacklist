@@ -66,7 +66,7 @@ class GMBActions {
         $userid = $cur_user->ID;
         $time = current_time('mysql');
         $exp = trim($_POST['gmb-bl-rule']);
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
 
         if(substr($exp, 0, 1) == '/' && substr($exp, -1, 1) == '/') {
             $exp = self::sanitize('regex', $exp);
@@ -110,7 +110,7 @@ class GMBActions {
 
         global $wpdb;
 
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
         $sql = "SELECT * FROM $table_name ORDER BY time DESC";
         $res = $wpdb->get_results($sql, ARRAY_A);
 
@@ -153,7 +153,7 @@ class GMBActions {
             return;
         }
 
-        $table_name = $wpdb->prefix . GMB_DB_NAME; 
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
         $sql = $wpdb->prepare("DELETE FROM $table_name WHERE id=%d", $id);
         $response['sql'] = $sql;
 

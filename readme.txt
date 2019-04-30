@@ -3,7 +3,7 @@ Name: Geek Mail Blacklist
 Contributors: Wagner
 Tags: Blacklist, spam, email
 Requires at least: 3.9
-Tested up to: 5.1.0
+Tested up to: 5.1.1
 Stable tag: trunk
 
 Block users with certain emails from registering to your WordPress site by adding blacklist rules.

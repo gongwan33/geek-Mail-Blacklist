@@ -17,8 +17,12 @@ if ( !defined( 'GMB_MENU_ITEM' ) ) {
 	define( 'GMB_MENU_ITEM', 'gmb_menu' );
 }
 
-if ( !defined( 'GMB_DB_NAME' ) ) {
-	define( 'GMB_DB_NAME', 'gmb_blacklist' );
+if ( !defined( 'GMB_DB_NAME_BLACKLIST' ) ) {
+	define( 'GMB_DB_NAME_BLACKLIST', 'gmb_blacklist' );
+}
+
+if ( !defined( 'GMB_DB_NAME_LOGIN_MONITOR' ) ) {
+	define( 'GMB_DB_NAME_LOGIN_MONITOR', 'gmb_monitor' );
 }
 
 if ( !defined( 'GMB_PATH' ) ) {
