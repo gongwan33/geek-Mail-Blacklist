@@ -133,7 +133,7 @@ class GMB {
             foreach($rules as $rule) {
                 $exp = trim($rule['expression']);
 
-                if(substr($exp, 0, 1) == '/' && substr($exp, -1, 1)) {
+                if(substr($exp, 0, 1) == '/' && substr($exp, -1, 1) == '/') {
                     $match_flag = preg_match($exp, $user_email, $matches);
 
                     if($match_flag == 1) {
