@@ -24,8 +24,7 @@ if($GMB_enabled === 'no') {
     $GMB_enable_btn_str = 'Error Status';
 }
 
-$gmb_ajax_nonce = wp_create_nonce('gmb_ajax');
-
+$monitor_counts = GMBMonitor::getCounts();
 $monitor_records = GMBMonitor::getRecords();
 ?>
 <form method="post" class="gmb-add-form">
@@ -86,16 +85,38 @@ $monitor_records = GMBMonitor::getRecords();
 </div>
 
 <div>
-    <button style="font-size:medium;padding:5px;">Clear Records</button>
+    <button id="gmb-del-records-btn" style="font-size:medium;padding:5px;">Clear Records</button>
 </div>
 
+<h4>Overall Status</h4>
+<table class="gmb-attemps-tb">
+    <tr>
+        <th>Uername</th>
+        <th>Email</th>
+        <th>Result</th>
+        <th>Count</th>
+    </tr>
+    <?php if(!empty($monitor_counts)):?>
+    <?php foreach($monitor_counts as $record):?>
+    <tr>
+        <td><?php echo esc_html($record['username']);?></td>
+        <td><?php echo esc_html($record['email']);?></td>
+        <?php $result = $record['result'] == 1?'Success':'Failed';?>
+        <td style="font-weight:bold;color:<?php echo esc_attr($record['result'] == 1?'green':'red')?>"><?php echo esc_html($result);?></td>
+        <td><?php echo esc_html($record['count']);?></td>
+    </tr>
+    <?php endforeach;?>
+    <?php endif;?>
+</table>
+
+<h4>Detailed Records</h4>
 <table class="gmb-attemps-tb">
     <tr>
         <th>Uername</th>
         <th>Email</th>
         <th>Last Attemt Time</th>
         <th>Result</th>
-        <th>Count</th>
+        <th>Info</th>
     </tr>
     <?php if(!empty($monitor_records)):?>
     <?php foreach($monitor_records as $record):?>
@@ -105,101 +126,11 @@ $monitor_records = GMBMonitor::getRecords();
         <td><?php echo esc_html($record['time']);?></td>
         <?php $result = $record['result'] == 1?'Success':'Failed';?>
         <td style="font-weight:bold;color:<?php echo esc_attr($record['result'] == 1?'green':'red')?>"><?php echo esc_html($result);?></td>
-        <td><?php echo esc_html($record['count']);?></td>
+        <td><?php echo esc_html($record['info']);?></td>
     </tr>
     <?php endforeach;?>
     <?php endif;?>
 </table>
 </div>
 
-<script type="text/javascript">
-var delBtns = document.querySelectorAll('.gmb-del-btn');
-var enableBtn = document.querySelector('#gmb-enable-btn');
 
-function post(action, data) {
-    var jsonDat = {
-        action: action, 
-        data: data,
-        _ajax_nonce: "<?php echo esc_js($gmb_ajax_nonce);?>",
-    }
-
-    jQuery.ajax({
-        url: ajaxurl,
-        data: jsonDat,
-        type: "POST",
-        dataType: "json",
-        success: function(res) {
-            location.href = location.href;
-        }, 
-    });
-}
-
-if(typeof delBtns != 'undefined' && delBtns.length > 0) {
-    delBtns.forEach(function(btn, idx) {
-        btn.addEventListener('click', function(ev) {
-            if(confirm('Are you sure to delete?')) {
-                var ele = ev.target;
-                var data = ele.getAttribute('data');
-
-                post('gmb_del', data);
-            };
-        });
-    });
-}
-
-if(typeof enableBtn != 'undefined') {
-    enableBtn.addEventListener('click', function(ev) {
-        var ele = ev.target;
-        var data = ele.getAttribute('data');
-
-        post("gmb_enable", data);
-    });
-}
-</script>
-
-<style type="text/css">
-.gmb-enable-session {
-    margin: 10px;
-}
-
-.gmb-add-form, .attempts-block {
-    margin: 10px;
-}
-
-.gmb-add-form div{
-    margin-bottom: 10px;
-}
-
-.gmb-rules-tb, .gmb-attemps-tb {
-    margin: 10px;
-    text-align: center;
-    width: 90%;
-}
-
-.gmb-rules-tb tr:nth-child(1) {
-    background-color: black; 
-    color: white;
-}
-
-.gmb-attemps-tb tr:nth-child(1) {
-    background-color: black; 
-    color: white;
-}
-
-.gmb-rules-tb td, .gmb-rules-tb th {
-    padding: 5px;
-}
-
-.gmb-attemps-tb td, .gmb-attemps-tb th {
-    padding: 5px;
-}
-
-.gmb-rules-tb tr:nth-child(2n) {
-    background-color: #ccc;
-}
-
-.gmb-attemps-tb tr:nth-child(2n) {
-    background-color: #ccc;
-}
-   
-</style>

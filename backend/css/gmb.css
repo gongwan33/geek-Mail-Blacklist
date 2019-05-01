@@ -1,0 +1,45 @@
+.gmb-enable-session {
+    margin: 10px;
+}
+
+.gmb-add-form, .attempts-block {
+    margin: 10px;
+}
+
+.gmb-add-form div{
+    margin-bottom: 10px;
+}
+
+.gmb-rules-tb, .gmb-attemps-tb {
+    margin: 10px;
+    text-align: center;
+    width: 90%;
+}
+
+.gmb-rules-tb tr:nth-child(1) {
+    background-color: black; 
+    color: white;
+}
+
+.gmb-attemps-tb tr:nth-child(1) {
+    background-color: black; 
+    color: white;
+}
+
+.gmb-rules-tb td, .gmb-rules-tb th {
+    padding: 5px;
+}
+
+.gmb-attemps-tb td, .gmb-attemps-tb th {
+    padding: 5px;
+}
+
+.gmb-rules-tb tr:nth-child(2n) {
+    background-color: #ccc;
+}
+
+.gmb-attemps-tb tr:nth-child(2n) {
+    background-color: #ccc;
+}
+   
+

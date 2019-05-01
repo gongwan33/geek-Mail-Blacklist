@@ -25,6 +25,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
 require_once(dirname(__FILE__).'/variables.php');
+require_once(GMB_PATH . '/lib/GMU.php');
 require_once(GMB_PATH . '/lib/GMB.php');
 require_once(GMB_PATH . '/lib/GMM.php');
 require_once(GMB_PATH.'/backend/actions.php');
@@ -33,6 +34,7 @@ require_once(GMB_PATH.'/backend/monitor.php');
 register_activation_hook( __FILE__, array( 'GMB', 'install' ) );
 register_deactivation_hook( __FILE__, array( 'GMB', 'uninstall' ) );
 GMB::init();
+GMBMonitor::init();
 GMBActions::init();
 GMM::deploy_monitor();
 

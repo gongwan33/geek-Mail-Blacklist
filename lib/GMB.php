@@ -12,7 +12,25 @@ class GMB {
 
     public static function init() {
         add_action('admin_menu', array(get_class(), 'registerAdminPages'));
+        add_action('admin_enqueue_scripts', array(get_class(), 'enqueueScripts'));
         self::deployBlacklist();
+    }
+
+    public static function enqueueScripts($hook) {
+        if($hook != 'toplevel_page_gmb_menu') {
+            return;
+        }
+        wp_enqueue_style( 'custom_wp_admin_css_chart', GMB_URL.'/backend/css/chart.min.css' );
+        wp_enqueue_style( 'custom_wp_admin_css_gmb', GMB_URL.'/backend/css/gmb.css' );
+        wp_enqueue_script( 'custom_wp_admin_js_chart', GMB_URL.'/backend/js/chart.min.js' );
+        wp_enqueue_script( 'custom_wp_admin_js_gmb', GMB_URL.'/backend/js/gmb.js', array(), false, true );
+
+        wp_localize_script( 'custom_wp_admin_js_gmb', 'ajaxobject',
+            array(
+                'ajaxurl'   => admin_url( 'admin-ajax.php' ),
+                'ajaxnonce' => wp_create_nonce( 'gmb_ajax' )
+            )
+        );
     }
 
     public static function create_database($sql, $tbname) {
@@ -45,13 +63,15 @@ class GMB {
             username varchar(100) NOT NULL,
             userid mediumint(9) NOT NULL DEFAULT -1,
             result tinyint(1) NOT NULL DEFAULT 0,
-            count int(16) NOT NULL DEFAULT 0,
+            ip varchar(200) NOT NULL DEFAULT '0.0.0.0',
+            info varchar(200),
             PRIMARY KEY  (id),
             INDEX (email),
             INDEX (username),
             INDEX (userid),
             INDEX (time),
-            INDEX (result)
+            INDEX (result),
+            INDEX (ip)
         )";
 
         self::create_database($sql, GMB_DB_NAME_LOGIN_MONITOR);

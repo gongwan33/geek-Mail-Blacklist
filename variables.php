@@ -5,6 +5,10 @@ if ( !defined( 'GMB_NAME' ) ) {
 	define( 'GMB_NAME', 'Geek Mail Blacklist' );
 }
 
+if ( !defined( 'GMB_RECORDS_MAX' ) ) {
+	define( 'GMB_RECORDS_MAX', 3 );
+}
+
 if ( !defined( 'GMB_PLUGIN_FILE' ) ) {
 	define( 'GMB_PLUGIN_FILE', __FILE__ );
 }
