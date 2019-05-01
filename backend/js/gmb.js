@@ -1,5 +1,4 @@
 (function() {
-    var delBtns = document.querySelectorAll('.gmb-del-btn');
     var enableBtn = document.querySelector('#gmb-enable-btn');
     var delRecordsBtn = document.querySelector('#gmb-del-records-btn');
 
@@ -25,18 +24,23 @@
         });
     }
 
-    if(typeof delBtns != 'undefined' && delBtns.length > 0) {
-        delBtns.forEach(function(btn, idx) {
-            btn.addEventListener('click', function(ev) {
-                if(confirm('Are you sure to delete?')) {
-                    var ele = ev.target;
-                    var data = ele.getAttribute('data');
+    function setDelBtnListener() {
+        var delBtns = document.querySelectorAll('.gmb-del-btn');
+        if(typeof delBtns != 'undefined' && delBtns.length > 0) {
+            delBtns.forEach(function(btn, idx) {
+                btn.addEventListener('click', function(ev) {
+                    if(confirm('Are you sure to delete?')) {
+                        var ele = ev.target;
+                        var data = ele.getAttribute('data');
 
-                    post('gmb_del', data);
-                };
+                        post('gmb_del', data);
+                    };
+                });
             });
-        });
+        }
     }
+
+    setDelBtnListener();
 
     if(typeof enableBtn != 'undefined') {
         enableBtn.addEventListener('click', function(ev) {
@@ -150,10 +154,12 @@
         select.addEventListener('change', function(ev) {
             var act = ev.target.getAttribute('data');
             var containerName = ev.target.getAttribute('container');
+            var container = document.getElementById(containerName);
+            container.innerHTML = '<div style="padding:5rem;text-align:center;">Loading...</div>';
 
             post(act, this.value, 'html', function(res) {
-                var container = document.getElementById(containerName);
                 container.innerHTML = res;
+                setDelBtnListener();
             });
         }); 
     });
