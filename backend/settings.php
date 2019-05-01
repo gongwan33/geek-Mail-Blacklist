@@ -10,6 +10,7 @@ if(!empty($_POST['gmb-bl-rule'])) {
 }
 
 $gmb_rules = GMBActions::getRules();
+$gmb_rules_num = GMBActions::getRuleNum();
 $GMB_enabled = get_option('gmb-enabled');
 
 if($GMB_enabled === 'no') {
@@ -24,16 +25,25 @@ if($GMB_enabled === 'no') {
     $GMB_enable_btn_str = 'Error Status';
 }
 
-$monitor_counts = GMBMonitor::getCounts();
-$monitor_records = GMBMonitor::getRecords();
+$gmb_monitor_counts = GMBMonitor::getCounts();
+$gmb_monitor_counts_num = GMBMonitor::getCountsNum();
+$gmb_monitor_records = GMBMonitor::getRecords();
+$gmb_monitor_records_num = GMBMonitor::getRecordNum();
 ?>
 <form method="post" class="gmb-add-form">
 <div>
     <h3>Emails to Block(Support Regular Expression):</h3>
-    <label><strong>Instruction</strong>: when adding regular expressions, please wrap it with symbol '/'. For example: /.*@a.com/ means filter all emails with the domain a.com. Any rule without wrapping by '/' will be regarded as a full match rule.</label>
-    <br/>
-    <label style="color:red"><strong>Warning</strong>: this blacklist function relys on the default WordPress registration process. So if you are using any customized registration pages, please make sure they follow the WordPress standard registration functions and process.</label>
+    <h4>Block certain Emails from registration.</h4>
+    <div class="gmb-instruct">
+        <strong>Instruction</strong>: 
+        <ul>
+            <li>when adding regular expressions, please wrap it with symbol '/'. For example: /.*@a.com/ means filter all the Emails with the domain a.com. Any rule without wrapping by '/' will be regarded as a full match rule.</li>
+        <br/>
+        <li>This blacklist function relys on the default WordPress registration process. So if you are using any customized registration pages, please make sure they follow the WordPress standard registration functions and process.</li>
+        </ul>
+    </div>
 </div>
+<br/>
 <div>
     <input type="text" name="gmb-bl-rule" placeholder="One rule at a time" style="width: 500px"/>
     <?php wp_nonce_field( 'gmb_form', 'gmb-form-nonce' ); ?>
@@ -52,26 +62,10 @@ $monitor_records = GMBMonitor::getRecords();
     <button data="<?php echo esc_attr($GMB_enable_btn_data);?>" style="font-size:medium;padding:5px" id="gmb-enable-btn"><?php echo esc_html($GMB_enable_btn_str);?></button>
 </div>
 
-<table class="gmb-rules-tb">
-<tr>
-    <th>Rules</th>
-    <th>Created Time</th>
-    <th>By</th>
-    <th>Action</th>
-</tr>
-
-<?php if(!empty($gmb_rules)):?>
-<?php foreach($gmb_rules as $rule):?>
-<tr>
-    <td><?php echo esc_html($rule['expression']);?></td>
-    <td><?php echo esc_html($rule['time']);?></td>
-    <?php $user = get_user_by('id', $rule['userid']);?>
-    <td><?php echo esc_html($user->display_name);?></td>
-    <td><button class="gmb-del-btn" data="<?php echo esc_attr($rule['id']);?>">Delete</button></td>
-</tr>
-<?php endforeach;?>
-<?php endif;?>
-</table>
+<div id="gmb-rules-tb-container">
+<?php gmb_rules_table($gmb_rules);?>
+</div>
+<?php gmb_pagination($gmb_rules_num, 'gmb_get_rules_page', 'gmb-rules-tb-container');?>
 
 <div>
 <br/>
@@ -89,48 +83,21 @@ $monitor_records = GMBMonitor::getRecords();
 </div>
 
 <h4>Overall Status</h4>
-<table class="gmb-attemps-tb">
-    <tr>
-        <th>Uername</th>
-        <th>Email</th>
-        <th>Result</th>
-        <th>Count</th>
-    </tr>
-    <?php if(!empty($monitor_counts)):?>
-    <?php foreach($monitor_counts as $record):?>
-    <tr>
-        <td><?php echo esc_html($record['username']);?></td>
-        <td><?php echo esc_html($record['email']);?></td>
-        <?php $result = $record['result'] == 1?'Success':'Failed';?>
-        <td style="font-weight:bold;color:<?php echo esc_attr($record['result'] == 1?'green':'red')?>"><?php echo esc_html($result);?></td>
-        <td><?php echo esc_html($record['count']);?></td>
-    </tr>
-    <?php endforeach;?>
-    <?php endif;?>
-</table>
+
+<div class="gmb-chart-container">
+    <canvas id="status-chart"></canvas>
+</div>
+
+<div id="gmb-counts-tb-container">
+<?php gmb_counts_table($gmb_monitor_counts);?>
+</div>
+<?php gmb_pagination($gmb_monitor_counts_num, 'gmb_get_monitor_counts_page', 'gmb-counts-tb-container');?>
 
 <h4>Detailed Records</h4>
-<table class="gmb-attemps-tb">
-    <tr>
-        <th>Uername</th>
-        <th>Email</th>
-        <th>Last Attemt Time</th>
-        <th>Result</th>
-        <th>Info</th>
-    </tr>
-    <?php if(!empty($monitor_records)):?>
-    <?php foreach($monitor_records as $record):?>
-    <tr>
-        <td><?php echo esc_html($record['username']);?></td>
-        <td><?php echo esc_html($record['email']);?></td>
-        <td><?php echo esc_html($record['time']);?></td>
-        <?php $result = $record['result'] == 1?'Success':'Failed';?>
-        <td style="font-weight:bold;color:<?php echo esc_attr($record['result'] == 1?'green':'red')?>"><?php echo esc_html($result);?></td>
-        <td><?php echo esc_html($record['info']);?></td>
-    </tr>
-    <?php endforeach;?>
-    <?php endif;?>
-</table>
+<div id="gmb-records-tb-container">
+<?php gmb_records_table($gmb_monitor_records);?>
+</div>
+<?php gmb_pagination($gmb_monitor_records_num, 'gmb_get_monitor_records_page', 'gmb-records-tb-container');?>
 </div>
 
 

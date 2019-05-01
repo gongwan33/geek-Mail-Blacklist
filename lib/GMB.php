@@ -25,10 +25,13 @@ class GMB {
         wp_enqueue_script( 'custom_wp_admin_js_chart', GMB_URL.'/backend/js/chart.min.js' );
         wp_enqueue_script( 'custom_wp_admin_js_gmb', GMB_URL.'/backend/js/gmb.js', array(), false, true );
 
+        $monitor_chart_data = GMBMonitor::getPeriodData();
         wp_localize_script( 'custom_wp_admin_js_gmb', 'ajaxobject',
             array(
                 'ajaxurl'   => admin_url( 'admin-ajax.php' ),
-                'ajaxnonce' => wp_create_nonce( 'gmb_ajax' )
+                'ajaxnonce' => wp_create_nonce( 'gmb_ajax' ),
+                'monitorchartdata' => $monitor_chart_data,
+                'today' => current_time('Y-m-d'),
             )
         );
     }

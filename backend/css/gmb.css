@@ -41,5 +41,30 @@
 .gmb-attemps-tb tr:nth-child(2n) {
     background-color: #ccc;
 }
-   
 
+.gmb-chart-container {
+    width: 92%;
+}
+
+.gmb-pagination {
+    text-align: center;
+}
+
+.gmb-pagination select{
+    min-width: 3rem;
+    text-align: center;
+}
+
+.gmb-pagination ul li{
+    float: left;
+}
+
+.gmb-instruct {
+    border: 1px solid orange;
+    padding: 10px;
+}
+
+.gmb-instruct ul {
+    list-style-type: square;
+    margin-left: 1rem;
+}

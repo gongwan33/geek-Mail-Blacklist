@@ -4,7 +4,7 @@
   Plugin URI: https://geekblog.mybluemix.net/archives/611
   Description: Block users with certain emails from registering
   Author: Wagner
-  Version: 1.0.0
+  Version: 1.1.0
 
 /*
 
@@ -26,10 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once(dirname(__FILE__).'/variables.php');
 require_once(GMB_PATH . '/lib/GMU.php');
+require_once(GMB_PATH . '/backend/table-rule.php');
+require_once(GMB_PATH . '/backend/table-counts.php');
+require_once(GMB_PATH . '/backend/table-records.php');
+require_once(GMB_PATH . '/backend/pagination.php');
+require_once(GMB_PATH . '/backend/monitor.php');
 require_once(GMB_PATH . '/lib/GMB.php');
 require_once(GMB_PATH . '/lib/GMM.php');
-require_once(GMB_PATH.'/backend/actions.php');
-require_once(GMB_PATH.'/backend/monitor.php');
+require_once(GMB_PATH . '/backend/actions.php');
 
 register_activation_hook( __FILE__, array( 'GMB', 'install' ) );
 register_deactivation_hook( __FILE__, array( 'GMB', 'uninstall' ) );

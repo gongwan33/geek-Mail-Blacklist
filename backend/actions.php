@@ -5,6 +5,7 @@ class GMBActions {
     public static function init() {
         add_action( 'wp_ajax_gmb_enable', array(get_class(), 'ajaxEnableRule'));
         add_action( 'wp_ajax_gmb_del', array(get_class(), 'ajaxDelRule'));
+        add_action( 'wp_ajax_gmb_get_rules_page', array(get_class(), 'ajaxGetRulePage'));
     }
 
     public static function ajaxEnableRule() {
@@ -16,6 +17,14 @@ class GMBActions {
     public static function ajaxDelRule() {
         check_ajax_referer( 'gmb_ajax' );
         self::delRule();
+        wp_die(); // All ajax handlers die when finished
+    }
+
+    public static function ajaxGetRulePage() {
+        check_ajax_referer( 'gmb_ajax' );
+        $page = (int) GMBActions::sanitize('num', $_POST['data']); 
+        $res = self::getRules(($page - 1)*GMB_DEFAULT_LIMIT, GMB_DEFAULT_LIMIT);
+        echo gmb_rules_table($res); 
         wp_die(); // All ajax handlers die when finished
     }
 
@@ -103,7 +112,7 @@ class GMBActions {
         );
     }
 
-    public static function getRules() {
+    public static function getRules($offset = GMB_DEFAULT_OFFSET, $limit = GMB_DEFAULT_LIMIT) {
         if(!GMB::isUserValid()) {
             return;
         }
@@ -111,8 +120,22 @@ class GMBActions {
         global $wpdb;
 
         $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
-        $sql = "SELECT * FROM $table_name ORDER BY time DESC";
+        $sql = "SELECT * FROM $table_name ORDER BY time DESC LIMIT $limit OFFSET $offset";
         $res = $wpdb->get_results($sql, ARRAY_A);
+
+        return $res;
+    }
+
+    public static function getRuleNum() {
+        if(!GMB::isUserValid()) {
+            return;
+        }
+
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . GMB_DB_NAME_BLACKLIST; 
+        $sql = "SELECT COUNT(*) FROM $table_name";
+        $res = $wpdb->get_var($sql);
 
         return $res;
     }

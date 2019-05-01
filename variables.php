@@ -6,7 +6,7 @@ if ( !defined( 'GMB_NAME' ) ) {
 }
 
 if ( !defined( 'GMB_RECORDS_MAX' ) ) {
-	define( 'GMB_RECORDS_MAX', 3 );
+	define( 'GMB_RECORDS_MAX', 1000000 );
 }
 
 if ( !defined( 'GMB_PLUGIN_FILE' ) ) {
@@ -36,4 +36,13 @@ if ( !defined( 'GMB_PATH' ) ) {
 if ( !defined( 'GMB_URL' ) ) {
 	define( 'GMB_URL', plugins_url( '', __FILE__ ) );
 }
+
+if(!defined('GMB_DEFAULT_OFFSET')) {
+    define('GMB_DEFAULT_OFFSET', 0);
+}
+
+if(!defined('GMB_DEFAULT_LIMIT')) {
+    define('GMB_DEFAULT_LIMIT', 15);
+}
+
 ?>
