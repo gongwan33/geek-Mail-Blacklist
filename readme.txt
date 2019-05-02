@@ -13,13 +13,18 @@ Block users with certain emails from registering to your WordPress site by addin
 - Super simple to use. The whole plugin just has one simple settings page.
 - Support regular expression rules.
 - Completely free.
+- Support tracking and recording login attempts since v1.1.0.
+- Login attempts chart since v1.1.0.
 
 == Installation ==
 - Download the plugin package.
-- Copy it to wp-content/plugins
+- Copy it to wp-content/plugins.
 - Unzip the package.
-- Activate it in your WordPress dashboard
+- Activate it in your WordPress dashboard.
 - Configure in 'Geek Mail Blacklist' page.
+- Attention: deactivating the plugin will clear the blacklist and login attempts this plugin recorded.
 
 == Screenshots ==
-1. Settings page
+1. Settings page 1
+2. Settings page 2
+3. Settings page 3
