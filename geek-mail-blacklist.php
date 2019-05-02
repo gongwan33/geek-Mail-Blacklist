@@ -38,6 +38,13 @@ require_once(GMB_PATH . '/backend/actions.php');
 register_activation_hook( __FILE__, array( 'GMB', 'install' ) );
 register_deactivation_hook( __FILE__, array( 'GMB', 'uninstall' ) );
 GMB::init();
+
+if(!GMB::check_database_exists("gmb_blacklist") || !GMB::check_database_exists("gmb_monitor")) {
+    //install corrupted
+    //reinstall
+    GMB::install();
+}
+
 GMBMonitor::init();
 GMBActions::init();
 GMM::deploy_monitor();
