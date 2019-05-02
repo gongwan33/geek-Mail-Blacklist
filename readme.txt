@@ -1,6 +1,6 @@
 === Geek Mail Blacklist ===
 Name: Geek Mail Blacklist
-Contributors: Wagner
+Contributors: gongwan33
 Tags: blacklist, spam, Email blacklist, mail, registration, login records
 Requires at least: 3.9
 Tested up to: 5.1.1

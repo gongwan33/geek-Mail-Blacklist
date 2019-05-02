@@ -3,7 +3,7 @@
   Plugin Name: Geek Mail Blacklist
   Plugin URI: https://geekblog.mybluemix.net/archives/611
   Description: Block users with certain Emails from registration
-  Author: Wagner
+  Author: gongwan33
   Version: 1.1.0
 
 /*
