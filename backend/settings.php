@@ -37,7 +37,7 @@ $gmb_monitor_records_num = GMBMonitor::getRecordNum();
     <div class="gmb-instruct">
         <strong>Instruction</strong>: 
         <ul>
-            <li>when adding regular expressions, please wrap it with symbol '/'. For example: /.*@a.com/ means filter all the Emails with the domain a.com. Any rule without wrapping by '/' will be regarded as a full match rule.</li>
+            <li>When adding regular expressions, please wrap it with symbol '/'. For example: /.*@a.com/ means filter all the Emails with the domain a.com. Any rule without wrapping by '/' will be regarded as a full match rule.</li>
         <br/>
         <li>This blacklist function relys on the default WordPress registration process. So if you are using any customized registration pages, please make sure they follow the WordPress standard registration functions and process.</li>
         </ul>
