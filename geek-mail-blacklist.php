@@ -39,7 +39,7 @@ register_activation_hook( __FILE__, array( 'GMB', 'install' ) );
 register_deactivation_hook( __FILE__, array( 'GMB', 'uninstall' ) );
 GMB::init();
 
-if(!GMB::check_database_exists("gmb_blacklist") || !GMB::check_database_exists("gmb_monitor")) {
+if(!GMB::check_database_exists(GMB_DB_NAME_BLACKLIST) || !GMB::check_database_exists(GMB_DB_NAME_LOGIN_MONITOR)) {
     //install corrupted
     //reinstall
     GMB::install();
